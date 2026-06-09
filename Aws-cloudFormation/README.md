@@ -113,27 +113,27 @@ Recursos definidos no template:
 
 O template foi criado e validado no **AWS Infrastructure Composer** — ferramenta visual integrada ao CloudFormation que permite construir e editar templates JSON/YAML com visualização dos recursos em canvas.
 
-![Template no Infrastructure Composer](../images/cloudformation-infrastructure-composer.png)
+![Template no Infrastructure Composer](./images/cloudformation-infrastructure-composer.png)
 *Template `static-website-cdn.json` validado no Infrastructure Composer. Status: "No template validation errors".*
 
 ### Deploy da Stack
 
 O template foi importado diretamente do Infrastructure Composer para o CloudFormation via URL do S3.
 
-![Importação do template no CloudFormation](../images/cloudformation-stack-import.png)
+![Importação do template no CloudFormation](./images/cloudformation-stack-import.png)
 *Template importado com sucesso via Infrastructure Composer. URL gerada automaticamente no S3.*
 
 ### Resultado: ROLLBACK_COMPLETE
 
 A stack entrou em `ROLLBACK_COMPLETE` — criou parcialmente e reverteu tudo.
 
-![Stack com status ROLLBACK_COMPLETE](../images/cloudformation-rollback.png)
+![Stack com status ROLLBACK_COMPLETE](./images/cloudformation-rollback.png)
 
 ### Por que falhou
 
 O recurso `BucketPolicy` entrou em `CREATE_FAILED`, causando o rollback de toda a stack.
 
-![Timeline de eventos da stack](../images/cloudformation-events.png)
+![Timeline de eventos da stack](./images/cloudformation-events.png)
 *Timeline mostra: WebsiteBucket criado com sucesso (verde), BucketPolicy falhou (vermelho), CloudFrontDistribution revertida junto.*
 
 **Causa raiz:** o template define `Principal: "*"` na política do bucket, que permite acesso público a todos os objetos. A partir de 2023, a AWS ativa o **Block Public Access** por padrão em todas as contas novas — qualquer política que tente conceder acesso público é bloqueada automaticamente, mesmo via CloudFormation.
